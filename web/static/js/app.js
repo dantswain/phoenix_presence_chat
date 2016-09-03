@@ -28,12 +28,12 @@ let formatTimestamp = (timestamp) => {
   
 }
 let listBy = (user, {metas: metas}) => {
+  console.log(`HI ${JSON.stringify(user)} ${JSON.stringify(metas)}`)
   return {
     user: user,
-    onlineAt: formatTimestamp(metas[0].online_at)
-    
+    onlineAt: formatTimestamp(metas[0].online_at),
+    count: metas.length
   }
-  
 }
 
 let userList = document.getElementById("UserList")
@@ -41,7 +41,7 @@ let render = (presences) => {
   userList.innerHTML = Presence.list(presences, listBy)
     .map(presence => `
          <li>
-         <b>${presence.user}</b>
+         <b>${presence.user}</b> (${presence.count})
          <br><small>online since ${presence.onlineAt}</small>
          </li>
          `)
@@ -52,14 +52,11 @@ let render = (presences) => {
 // Channels
 let room = socket.channel("room:lobby", {})
 room.on("presence_state", state => {
-  console.log("STATE: " + JSON.stringify(state))
-  Presence.syncState(presences, state)
-  render(state)
-  
+  presences = Presence.syncState(presences, state)
+  render(presences)
 })
 
 room.on("presence_diff", diff => {
-  console.log("DIFF: " + JSON.stringify(diff))
   presences = Presence.syncDiff(presences, diff)
   render(presences)
   
