@@ -7,7 +7,7 @@ use Mix.Config
 # watchers to your application. For example, we use it
 # with brunch.io to recompile .js and .css sources.
 config :phoenix_chat, PhoenixChat.Endpoint,
-  http: [port: (System.get_env("HTTP_PORT") || 4000 )|> :erlang.binary_to_integer],
+  http: [port: (System.get_env("HTTP_PORT") || "4000" )|> :erlang.binary_to_integer],
   debug_errors: true,
   code_reloader: true,
   check_origin: false,
